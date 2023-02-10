@@ -23,9 +23,8 @@ var corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.use("/", (req,res) => {
-  res.json("Hello world");
-});
+let index = require('./app/routes/web')
+app.use("/", index);
 
 const server = async () => {
   try {
