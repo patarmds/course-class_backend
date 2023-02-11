@@ -56,4 +56,24 @@ module.exports = {
         }
     },
 
+    profile : async (req, res) => {
+        try{
+            const bearer = req.headers.authorization ?? false;
+            if(!bearer) return res.status(400).json(response(false, "Invalid token", null));
+
+            const token = bearer.replace("Bearer ", "");
+            var jwtVerify = JWT.verify(token, process.env.JWT_SECRET);
+            if(!jwtVerify) return res.status(400).json(response(false, "Invalid token", null));
+
+            const user = await User.findById(jwtVerify.id).select("-password");
+            return res.status(200).json(response(true, "Get Profile Success", user));
+
+        }catch(err){
+            return res.status(500).json(response(false, err.message, null));
+        }
+    }
+
+
+    
+
 }
